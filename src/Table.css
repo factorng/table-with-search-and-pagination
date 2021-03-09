@@ -1,0 +1,35 @@
+.form-search {
+  margin: 1rem;
+}
+td {
+  border: 1px solid black;
+  padding: 0.3rem;
+}
+table {
+  border-collapse: collapse;
+  margin: 1rem;
+  height: 80vh;
+  font-size: 0.8rem;
+}
+.table__category {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+.table__category:hover {
+  background-color: white;
+}
+.page-numbers {
+  list-style: none;
+}
+.page-numbers__page {
+  display: inline-block;
+  margin: 0 1rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.page-numbers__page:hover {
+  color: blue;
+}
+.page-numbers__page_selected {
+  font-weight: bold;
+}

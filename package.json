@@ -1,5 +1,6 @@
 {
-  "name": "table_with_pagination",
+  "name": "table-with-search-and-pagination",
+  "homepage": "https://factorng.github.io/table-with-search-and-pagination/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,10 +13,11 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER=firefox react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d dist"
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +36,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "3.1.0"
   }
 }
