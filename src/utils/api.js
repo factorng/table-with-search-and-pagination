@@ -1,3 +1,5 @@
 export const getItems = () => {
-  return fetch("https://fakestoreapi.com/products").then((res) => res.json());
+  return fetch(
+    "https://jsonplaceholder.typicode.com/comments?_limit=50"
+  ).then((res) => res.json());
 };

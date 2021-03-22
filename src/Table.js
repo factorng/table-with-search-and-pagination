@@ -7,48 +7,50 @@ const Table = (props) => {
   const [items, setItems] = React.useState([]);
   const [sortCategory, setSortCategory] = React.useState("");
   const [input, setInput] = React.useState({});
-  const [inputSelect, setInputSelect] = React.useState({});
   const [categories, setCategories] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [itemsPerPage, setItemsPerpage] = React.useState(5);
   const [currentItems, setCurrentItems] = React.useState([]);
 
-  React.useEffect(() => {
-    getItems()
-      .then((res) => {
-        setItems(res);
-        return res;
-      })
-      .then((res) => setCategories(Object.keys(res[0])));
-  }, []);
-
-  React.useEffect(() => {
+  const getCurrentItems = React.useMemo(() => {
     if (items) {
       const indexOfLastItem = currentPage * itemsPerPage;
       const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-      setCurrentItems([...items.slice(indexOfFirstItem, indexOfLastItem)]);
+      return [...items.slice(indexOfFirstItem, indexOfLastItem)];
     }
   }, [items, currentPage, itemsPerPage]);
 
-  const pageClickHandler = (e) => setCurrentPage(e.target.innerText);
+  const handleSearch = () => {
+    let searchedItems = [];
+    getCurrentItems.forEach((item) => {
+      const finded = Object.values(item).filter((elem) => {
+        return elem.toString().toLowerCase().indexOf(input.search) !== -1;
+      });
+      if (finded.length) searchedItems.push(item);
+    });
+    setCurrentItems([...searchedItems]);
+  };
 
-  const pages = () => {
+  const pageNumberClickHandler = (e) => setCurrentPage(e.target.innerText);
+
+  const getPagesNumbers = () => {
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(items.length / itemsPerPage); i++) {
       pageNumbers.push(i);
     }
     return (
       <ul className="page-numbers">
-        {pageNumbers.map((page) => (
+        {pageNumbers.map((pageNumber, i) => (
           <li
-            onClick={(e) => pageClickHandler(e)}
+            key={pageNumber}
+            onClick={(e) => pageNumberClickHandler(e)}
             className={
-              page === parseInt(currentPage)
+              pageNumber === parseInt(currentPage)
                 ? "page-numbers__page page-numbers__page_selected"
                 : "page-numbers__page"
             }
           >
-            {page}
+            {pageNumber}
           </li>
         ))}
       </ul>
@@ -67,57 +69,40 @@ const Table = (props) => {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setInput({ ...input, [e.target.name]: e.target.value });
-    const searchedItems = currentItems.filter((elem) => {
-      return (
-        elem[inputSelect.category]
-          .toString()
-          .toLowerCase()
-          .indexOf(e.target.value) !== -1
-      );
-    });
-    if (searchedItems.length) {
-      searchedItems.forEach((searchedItem) => {
-        currentItems.forEach((item, index) => {
-          if (searchedItem.id === item.id) currentItems.splice(index, 1);
-        });
-      });
+  const handleInput = (e) => setInput({ [e.target.name]: e.target.value });
 
-      searchedItems.forEach((item) => currentItems.unshift(item));
-      setCurrentItems([...currentItems]);
-    }
-  };
+  React.useEffect(() => {
+    getItems()
+      .then((res) => {
+        setItems(res);
+        return res;
+      })
+      .then((res) => setCategories(Object.keys(res[0])));
+  }, []);
 
-  const handleSelect = (e) =>
-    setInputSelect({ ...inputSelect, [e.target.name]: e.target.value });
+  React.useEffect(() => {
+    setCurrentItems([...getCurrentItems]);
+  }, [items, currentPage, itemsPerPage, getCurrentItems]);
+
+  React.useEffect(() => {
+    handleSearch();
+  }, [input]);
 
   return (
     <>
-      <form onSubmit={(e) => handleSearch(e)} className="form-search">
-        <caption>Search</caption>
-        <select
-          value={inputSelect.category}
-          onChange={(e) => handleSelect(e)}
-          name="category"
-        >
-          <option disabled selected value>
-            -- select an option --
-          </option>
-          {categories.map((item) => (
-            <option value={item}>{item}</option>
-          ))}
-        </select>
+      <form onSubmit={(e) => e.preventDefault()} className="form-search">
+        <h3>Search</h3>
         <input
           name="search"
-          onInput={(e) => handleSearch(e)}
-          value={input.search}
-          onBlur={(e) => setInput({ ...input, ["search"]: "" })}
+          onInput={(e) => handleInput(e)}
+          value={input.search || ""}
+          onBlur={(e) => {
+            setInput({ ...input, ["search"]: "" });
+          }}
         />
       </form>
       <table>
-        <tr>
+        <tr className="table__header">
           {categories.map((category, i) => (
             <td
               onClick={(e) => handleClick(e)}
@@ -129,15 +114,15 @@ const Table = (props) => {
           ))}
         </tr>
 
-        {currentItems.map((elem) => (
-          <tr>
-            {categories.map((category) => (
-              <td key={elem[category].id}>{elem[category]}</td>
+        {currentItems.map((elem, i) => (
+          <tr key={i} className="table__row">
+            {categories.map((category, i) => (
+              <td key={i}>{elem[category]}</td>
             ))}
           </tr>
         ))}
       </table>
-      {pages()}
+      {getPagesNumbers()}
     </>
   );
 };
