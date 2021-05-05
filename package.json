@@ -1,6 +1,6 @@
 {
   "name": "table-with-search-and-pagination",
-  "homepage": "https://factorng.github.io/table-with-search-and-pagination/",
+  "homepage": "./",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,6 +10,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
+    "react-sticky-table": "^5.1.11",
+    "styled-components": "^5.2.3",
     "web-vitals": "^1.1.0"
   },
   "scripts": {
@@ -38,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^1.12.0",
     "gh-pages": "3.1.0"
   }
 }
