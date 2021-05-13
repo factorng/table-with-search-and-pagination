@@ -6,6 +6,7 @@
 - fixed 3 first columns
 - search field to search in a whole table
 - show or hide table columns
+- columns drag and drop
 - mobile friendly
 
 [Gh-pages link](https://factorng.github.io/table-with-search-and-pagination/)
